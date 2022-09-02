@@ -16,7 +16,7 @@ provider:
 
   stage: ${opt:stage, 'dev'}
   region: ${opt:region, 'us-east-1'}
-  profile: serverless
+  #profile: serverless
 
   tracing:
     lambda: true

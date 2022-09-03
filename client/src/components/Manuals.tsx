@@ -126,7 +126,7 @@ export class Manuals extends React.PureComponent<ManualsProps, ManualsState> {
             }}
             fluid
             actionPosition="left"
-            placeholder="To change the world..."
+            placeholder="Dishwasher, dryer, etc..."
             onChange={this.handleNameChange}
           />
         </Grid.Column>
@@ -149,7 +149,7 @@ export class Manuals extends React.PureComponent<ManualsProps, ManualsState> {
     return (
       <Grid.Row>
         <Loader indeterminate active inline="centered">
-          Loading TODOs
+          Loading Manuals
         </Loader>
       </Grid.Row>
     )

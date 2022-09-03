@@ -219,8 +219,6 @@ resources:
             AttributeType: S
           - AttributeName: createdAt
             AttributeType: S
-          - AttributeName: manufacturerLink
-            AttributeType: S
         KeySchema:
           - AttributeName: userId
             KeyType: HASH

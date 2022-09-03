@@ -14,106 +14,105 @@ import {
   Loader
 } from 'semantic-ui-react'
 
-import { createTodo, deleteTodo, getTodos, patchTodo } from '../api/todos-api'
+import { createManual, deleteManual, getManuals, patchManual } from '../api/manuals-api'
 import Auth from '../auth/Auth'
-import { Todo } from '../types/Todo'
+import { Manual } from '../types/Manual'
 
-interface TodosProps {
+interface ManualsProps {
   auth: Auth
   history: History
 }
 
-interface TodosState {
-  todos: Todo[]
-  newTodoName: string
-  loadingTodos: boolean
+interface ManualsState {
+  manuals: Manual[]
+  newManualName: string
+  loadingManuals: boolean
 }
 
-export class Todos extends React.PureComponent<TodosProps, TodosState> {
-  state: TodosState = {
-    todos: [],
-    newTodoName: '',
-    loadingTodos: true
+export class Manuals extends React.PureComponent<ManualsProps, ManualsState> {
+  state: ManualsState = {
+    manuals: [],
+    newManualName: '',
+    loadingManuals: true
   }
 
   handleNameChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    this.setState({ newTodoName: event.target.value })
+    this.setState({ newManualName: event.target.value })
   }
 
-  onEditButtonClick = (todoId: string) => {
-    this.props.history.push(`/todos/${todoId}/edit`)
+  onEditButtonClick = (manualId: string) => {
+    this.props.history.push(`/manuals/${manualId}/edit`)
   }
 
-  onTodoCreate = async (event: React.ChangeEvent<HTMLButtonElement>) => {
+  onManualCreate = async (event: React.ChangeEvent<HTMLButtonElement>) => {
     try {
       const dueDate = this.calculateDueDate()
-      const newTodo = await createTodo(this.props.auth.getIdToken(), {
-        name: this.state.newTodoName,
+      const newManual = await createManual(this.props.auth.getIdToken(), {
+        name: this.state.newManualName,
         dueDate
       })
       this.setState({
-        todos: [...this.state.todos, newTodo],
-        newTodoName: ''
+        manuals: [...this.state.manuals, newManual],
+        newManualName: ''
       })
     } catch {
-      alert('Todo creation failed')
+      alert('Manual creation failed')
     }
   }
 
-  onTodoDelete = async (todoId: string) => {
+  onManualDelete = async (manualId: string) => {
     try {
-      await deleteTodo(this.props.auth.getIdToken(), todoId)
+      await deleteManual(this.props.auth.getIdToken(), manualId)
       this.setState({
-        todos: this.state.todos.filter(todo => todo.todoId !== todoId)
+        manuals: this.state.manuals.filter(manual => manual.manualId !== manualId)
       })
     } catch {
-      alert('Todo deletion failed')
+      alert('Manual deletion failed')
     }
   }
 
-  onTodoCheck = async (pos: number) => {
+  onManualCheck = async (pos: number) => {
     try {
-      const todo = this.state.todos[pos]
-      await patchTodo(this.props.auth.getIdToken(), todo.todoId, {
-        name: todo.name,
-        dueDate: todo.dueDate,
-        done: !todo.done
+      const manual = this.state.manuals[pos]
+      await patchManual(this.props.auth.getIdToken(), manual.manualId, {
+        name: manual.name,
+        addDate: manual.addDate
       })
-      this.setState({
-        todos: update(this.state.todos, {
-          [pos]: { done: { $set: !todo.done } }
+  /*     this.setState({
+        manuals: update(this.state.manuals, {
+          [pos]: { done: { $set: !manual.done } }
         })
-      })
+      }) */
     } catch {
-      alert('Todo deletion failed')
+      alert('Manual deletion failed')
     }
   }
 
   async componentDidMount() {
     try {
-      const todos = await getTodos(this.props.auth.getIdToken())
+      const manuals = await getManuals(this.props.auth.getIdToken())
       this.setState({
-        todos,
-        loadingTodos: false
+        manuals,
+        loadingManuals: false
       })
     } catch (e) {
-      alert(`Failed to fetch todos`)
+      alert(`Failed to fetch manuals`)
     }
   }
 
   render() {
     return (
       <div>
-        <Header as="h1">TODOs</Header>
+        <Header as="h1">Manuals</Header>
 
-        {this.renderCreateTodoInput()}
+        {this.renderCreateManualInput()}
 
-        {this.renderTodos()}
+        {this.renderManuals()}
       </div>
     )
   }
 
-  renderCreateTodoInput() {
+  renderCreateManualInput() {
     return (
       <Grid.Row>
         <Grid.Column width={16}>
@@ -122,8 +121,8 @@ export class Todos extends React.PureComponent<TodosProps, TodosState> {
               color: 'teal',
               labelPosition: 'left',
               icon: 'add',
-              content: 'New task',
-              onClick: this.onTodoCreate
+              content: 'Add new manual',
+              onClick: this.onManualCreate
             }}
             fluid
             actionPosition="left"
@@ -138,12 +137,12 @@ export class Todos extends React.PureComponent<TodosProps, TodosState> {
     )
   }
 
-  renderTodos() {
-    if (this.state.loadingTodos) {
+  renderManuals() {
+    if (this.state.loadingManuals) {
       return this.renderLoading()
     }
 
-    return this.renderTodosList()
+    return this.renderManualsList()
   }
 
   renderLoading() {
@@ -156,29 +155,29 @@ export class Todos extends React.PureComponent<TodosProps, TodosState> {
     )
   }
 
-  renderTodosList() {
+  renderManualsList() {
     return (
       <Grid padded>
-        {this.state.todos.map((todo, pos) => {
+        {this.state.manuals.map((manual, pos) => {
           return (
-            <Grid.Row key={todo.todoId}>
+            <Grid.Row key={manual.manualId}>
               <Grid.Column width={1} verticalAlign="middle">
-                <Checkbox
-                  onChange={() => this.onTodoCheck(pos)}
-                  checked={todo.done}
-                />
+{/*                 <Checkbox
+                  onChange={() => this.onManualCheck(pos)}
+                  checked={manual.done}
+                /> */}
               </Grid.Column>
               <Grid.Column width={10} verticalAlign="middle">
-                {todo.name}
+                {manual.name}
               </Grid.Column>
               <Grid.Column width={3} floated="right">
-                {todo.dueDate}
+                {manual.addDate}
               </Grid.Column>
               <Grid.Column width={1} floated="right">
                 <Button
                   icon
                   color="blue"
-                  onClick={() => this.onEditButtonClick(todo.todoId)}
+                  onClick={() => this.onEditButtonClick(manual.manualId)}
                 >
                   <Icon name="pencil" />
                 </Button>
@@ -187,13 +186,13 @@ export class Todos extends React.PureComponent<TodosProps, TodosState> {
                 <Button
                   icon
                   color="red"
-                  onClick={() => this.onTodoDelete(todo.todoId)}
+                  onClick={() => this.onManualDelete(manual.manualId)}
                 >
                   <Icon name="delete" />
                 </Button>
               </Grid.Column>
-              {todo.attachmentUrl && (
-                <Image src={todo.attachmentUrl} size="small" wrapped />
+              {manual.attachmentUrl && (
+                <Image src={manual.attachmentUrl} size="small" wrapped />
               )}
               <Grid.Column width={16}>
                 <Divider />

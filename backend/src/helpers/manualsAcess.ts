@@ -1,12 +1,14 @@
-import * as AWS from 'aws-sdk'
-import * as AWSXRay from 'aws-xray-sdk'
+//import * as AWS from 'aws-sdk'
+//import * as AWSXRay from 'aws-xray-sdk'
 import { DocumentClient } from 'aws-sdk/clients/dynamodb'
 import { createLogger } from '../utils/logger'
 import { ManualItem } from '../models/ManualItem'
 import { ManualUpdate } from '../models/ManualUpdate';
 //import { S3 } from 'aws-sdk'
 
-const XAWS = AWSXRay.captureAWS(AWS)
+const AWSXRay = require('aws-xray-sdk')
+
+//const XAWS = AWSXRay.captureAWS(AWS)
 
 const logger = createLogger('ManualsAccess')
 
@@ -14,7 +16,7 @@ const bucketName = process.env.ATTACHMENT_S3_BUCKET
 
 export class ManualsAccess {
     constructor(
-      private readonly docClient: DocumentClient = new XAWS.DynamoDB.DocumentClient(),
+      private readonly docClient: DocumentClient = new AWSXRay.DynamoDB.DocumentClient(),
       private readonly manualsTable = process.env.MANUALS_TABLE
     ) {}
   

@@ -12,7 +12,7 @@ export class AttachmentUtils {
       private readonly urlExpiration = process.env.SIGNED_URL_EXPIRATION
     ) {}
   
-    generatePresignedUrl(todoId: string): string {
+    generatePresignedUrl(manualId: string): string {
       return this.s3.getSignedUrl('putObject', {
         Bucket: this.bucketName,
         Key: manualId,

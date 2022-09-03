@@ -9,20 +9,20 @@ import * as uuid from 'uuid'
 
 const logger = createLogger('manuals');
 
-const manualsaccess = new ManualsAccess()
+const manualsAccess = new ManualsAccess()
 
 const attachmentUtils = new AttachmentUtils()
 
 export async function getManualsForUser(userId: string): Promise<ManualItem[]> {
   logger.log({
     level: 'info',
-    message: 'Retrieving Manuals'
+    message: 'Getting Manuals'
   })
-  return manualsaccess.getAllManuals(userId)
+  return manualsAccess.getAllManuals(userId)
 }
 
 export async function createManual(
-  CreateManualRequest: CreateManualRequest,
+  createManualRequest: CreateManualRequest,
   userId: string
 ): Promise<ManualItem> {
   logger.log({
@@ -33,17 +33,17 @@ export async function createManual(
   const manual = {
     manualId,
     userId,
-    name: CreateManualRequest.name,
-    addDate: CreateManualRequest.addDate,
+    name: createManualRequest.name,
+    addDate: createManualRequest.addDate,
     createdAt: new Date().toISOString(),
     done: false
   }
 
-  return ManualsAccess.createManual(manual)
+  return manualsAccess.createManual(manual)
 }
 
 export async function updateManual(
-  UpdateManualRequest: UpdateManualRequest,
+  updateManualRequest: UpdateManualRequest,
   manualId: string,
   userId: string
 ): Promise<void> {
@@ -51,21 +51,21 @@ export async function updateManual(
     level: 'info',
     message: 'Updating Manual'
   })
-  return ManualsAccess.updateManual(manualId, userId, UpdateManualRequest)
+  return manualsAccess.updateManual(manualId, userId, updateManualRequest)
 }
 
 export async function deleteManual(
   manualId: string,
   userId: string
 ): Promise<void> {
-  return ManualsAccess.deleteManual(manualId, userId)
+  return manualsAccess.deleteManual(manualId, userId)
 }
 
 export async function createAttachmentPresignedUrl(
   manualId: string,
   userId: string
 ): Promise<string> {
-  await ManualsAccess.updatemanualUrl(manualId, userId)
+  await manualsAccess.updateManualUrl(manualId, userId)
 
   return attachmentUtils.generatePresignedUrl(manualId)
 }

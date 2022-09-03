@@ -15,7 +15,7 @@ export class AttachmentUtils {
     generatePresignedUrl(todoId: string): string {
       return this.s3.getSignedUrl('putObject', {
         Bucket: this.bucketName,
-        Key: todoId,
+        Key: manualId,
         Expires: this.urlExpiration
       })
     }

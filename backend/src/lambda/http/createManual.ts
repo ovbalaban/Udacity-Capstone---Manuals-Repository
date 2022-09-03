@@ -2,23 +2,22 @@ import { APIGatewayProxyEvent, APIGatewayProxyResult } from 'aws-lambda'
 import 'source-map-support/register'
 import * as middy from 'middy'
 //import { cors } from 'middy/middlewares'
-import { CreateTodoRequest } from '../../requests/CreateTodoRequest'
+import { CreateManualRequest } from '../../requests/CreateManualRequest'
 import { getUserId } from '../utils';
-import { createTodo } from '../../helpers/todos'
+import { createManual } from '../../helpers/manuals'
 import { createLogger } from "../../utils/logger"
 
-const logger = createLogger('createTodo');
+const logger = createLogger('createManual');
 
 export const handler = middy(
   async (event: APIGatewayProxyEvent): Promise<APIGatewayProxyResult> => {
-    const newTodo: CreateTodoRequest = JSON.parse(event.body)
-    // TODO: Implement creating a new TODO item
-    //Done
+    const newManual: CreateManualRequest = JSON.parse(event.body)
 
-    logger.info('Processing createTodo event', { event })
+
+    logger.info('Processing createManual event', { event })
 
     const userId = getUserId(event)
-    const todo = await createTodo(newTodo, userId)
+    const manual = await createManual(newManual, userId)
     return {
       statusCode: 200,
       headers: {
@@ -26,7 +25,7 @@ export const handler = middy(
         'Access-Control-Allow-Credentials': true
       },
       body: JSON.stringify({
-        item: todo
+        item: manual
       })
     }
   }

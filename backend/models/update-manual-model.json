@@ -6,13 +6,16 @@
     "name": {
       "type": "string"
     },
-    "dueDate": {
+    "addDate": {
       "type": "string"
+    },
+    "link": {
+      "type": "boolean"
     }
   },
   "required": [
     "name",
-    "dueDate"
+    "addDate"
   ],
   "additionalProperties": false
 }

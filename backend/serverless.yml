@@ -1,8 +1,7 @@
-# TODO: Change the name of the org 
-# Done.
+# Organization removed due to GitHub Actions incompatibility
 # org: ovbalaban
-app: serverless-todo-app
-service: serverless-todo-app
+app: serverless-manuals-repository
+service: serverless-manuals-repository
 
 plugins:
   - serverless-webpack
@@ -16,22 +15,20 @@ provider:
 
   stage: ${opt:stage, 'dev'}
   region: ${opt:region, 'us-east-1'}
-  #profile: serverless
+  # Profile removed due to GitHub Actions incompatibility
+  # profile: serverless 
 
   tracing:
     lambda: true
     apiGateway: true
 
-  # Use these variables in the functions and resouorces section below. For example, 
-  # ${self:provider.environment.ATTACHMENT_S3_BUCKET}
   environment:
-    TODOS_TABLE: Todos-Ovi${self:provider.stage}
-    TODOS_CREATED_AT_INDEX: CreatedAtIndex
-    ATTACHMENT_S3_BUCKET: serverless-c4-todo-images-ovi-${self:provider.stage}
+    MANUALS_TABLE: Manuals-Repo-${self:provider.stage}
+    MANUAL_CREATED_AT_INDEX: CreatedAtIndex
+    ATTACHMENT_S3_BUCKET: serverless-manuals-repository-${self:provider.stage}
     SIGNED_URL_EXPIRATION: 300
 
   logs:
-    # Enable API Gateway logs
     restApi: true
 
   iam:
@@ -49,22 +46,19 @@ functions:
   Auth:
     handler: src/lambda/auth/auth0Authorizer.handler
 
-  # TODO: Configure this function - 
-  # Provide iamRoleStatements property for performing Actions on DynamoDB
-  # Done
-  GetTodos:
-    handler: src/lambda/http/getTodos.handler
+  GetManuals:
+    handler: src/lambda/http/getManuals.handler
     events:
       - http:
           method: get
-          path: todos
+          path: manuals
           cors: true
           authorizer: Auth
     iamRoleStatements:
       - Effect: Allow
         Action:
           - dynamodb:Query
-        Resource: arn:aws:dynamodb:${self:provider.region}:*:table/${self:provider.environment.TODOS_TABLE}
+        Resource: arn:aws:dynamodb:${self:provider.region}:*:table/${self:provider.environment.MANUALS_TABLE}
       - Effect: Allow
         Action:
           - xray:GetSamplingRules
@@ -79,28 +73,24 @@ functions:
           - xray:PutTraceSegments
         Resource:
           - "*"
-  # TODO: Configure this function - 
-  # Provide iamRoleStatements property. Decide the Actions and AWS Resource. 
-  # To refer to an AWS resource defined in the "Resources" section, you can use "Resource: !GetAtt <resource-name>.Arn"
-  # To validate incoming HTTP requests, we have provided the request schemas in function definition below. 
-  # Done
-  CreateTodo:
-    handler: src/lambda/http/createTodo.handler
+
+  CreateManual:
+    handler: src/lambda/http/createManual.handler
     events:
       - http:
           method: post
-          path: todos
+          path: manuals
           cors: true
           authorizer: Auth
           request:
             schemas:
-              application/json: ${file(models/create-todo-model.json)}
+              application/json: ${file(models/create-manual-model.json)}
     iamRoleStatements:
       - Effect: Allow
         Action:
           - dynamodb:PutItem
           - dynamodb:Query
-        Resource: arn:aws:dynamodb:${self:provider.region}:*:table/${self:provider.environment.TODOS_TABLE}
+        Resource: arn:aws:dynamodb:${self:provider.region}:*:table/${self:provider.environment.MANUALS_TABLE}
       - Effect: Allow
         Action:
           - xray:GetSamplingRules
@@ -115,15 +105,13 @@ functions:
           - xray:PutTraceSegments
         Resource:
           - "*"
-  # TODO: Configure this function
-  # Provide property for setting up CORS, Authorizer, iamRoleStatements, and request schemas
-  # Done
-  UpdateTodo:
-    handler: src/lambda/http/updateTodo.handler
+
+  UpdateManual:
+    handler: src/lambda/http/updateManual.handler
     events:
       - http:
           method: patch
-          path: todos/{todoId}
+          path: manuals/{manualId}
           cors: true
           authorizer: Auth
     iamRoleStatements:
@@ -131,7 +119,7 @@ functions:
         Action:
           - dynamodb:UpdateItem
           - dynamodb:Query
-        Resource: arn:aws:dynamodb:${self:provider.region}:*:table/${self:provider.environment.TODOS_TABLE}
+        Resource: arn:aws:dynamodb:${self:provider.region}:*:table/${self:provider.environment.MANUALS_TABLE}
       - Effect: Allow
         Action:
           - xray:GetSamplingRules
@@ -146,15 +134,13 @@ functions:
           - xray:PutTraceSegments
         Resource:
           - "*"
-  # TODO: Configure this function
-  # Provide property for setting up CORS, Authorizer, iamRoleStatements
-  # Done
-  DeleteTodo:
-    handler: src/lambda/http/deleteTodo.handler
+
+  DeleteManual:
+    handler: src/lambda/http/deleteManual.handler
     events:
       - http:
           method: delete
-          path: todos/{todoId}
+          path: manuals/{manualId}
           cors: true
           authorizer: Auth
     iamRoleStatements:
@@ -162,7 +148,7 @@ functions:
         Action:
           - dynamodb:DeleteItem
           - dynamodb:Query
-        Resource: arn:aws:dynamodb:${self:provider.region}:*:table/${self:provider.environment.TODOS_TABLE}
+        Resource: arn:aws:dynamodb:${self:provider.region}:*:table/${self:provider.environment.MANUALS_TABLE}
       - Effect: Allow
         Action:
           - xray:GetSamplingRules
@@ -177,15 +163,13 @@ functions:
           - xray:PutTraceSegments
         Resource:
           - "*"
-  # TODO: Configure this function
-  # Provide property for setting up CORS, Authorizer, iamRoleStatements
-  # Done
+
   GenerateUploadUrl:
     handler: src/lambda/http/generateUploadUrl.handler
     events:
       - http:
           method: post
-          path: todos/{todoId}/attachment
+          path: manuals/{manualId}/attachment
           cors: true
           authorizer: Auth
     iamRoleStatements:
@@ -193,7 +177,7 @@ functions:
         Action:
           - dynamodb:UpdateItem
           - dynamodb:Query
-        Resource: arn:aws:dynamodb:${self:provider.region}:*:table/${self:provider.environment.TODOS_TABLE}
+        Resource: arn:aws:dynamodb:${self:provider.region}:*:table/${self:provider.environment.MANUALS_TABLE}
       - Effect: Allow
         Action:
           - s3:PutObject
@@ -215,10 +199,6 @@ functions:
           - "*"
 resources:
   Resources:
-    # Add necessary AWS resources. You will need at least the following AWS resources
-    # TODO: Fill the properties
-    # Feel free to change the names as you like. 
-    # Done
     GatewayResponseDefault4XX:
       Type: AWS::ApiGateway::GatewayResponse
       Properties:
@@ -229,27 +209,27 @@ resources:
         ResponseType: DEFAULT_4XX
         RestApiId:
           Ref: ApiGatewayRestApi
-    # TODO: Create a DynamoDB table with local secondary index and a composite key
-    # Done
-    TodosTable:
+    ManualsTable:
       Type: AWS::DynamoDB::Table
       Properties:
         AttributeDefinitions:
           - AttributeName: userId
             AttributeType: S
-          - AttributeName: todoId
+          - AttributeName: manualId
             AttributeType: S
           - AttributeName: createdAt
+            AttributeType: S
+          - AttributeName: manufacturerLink
             AttributeType: S
         KeySchema:
           - AttributeName: userId
             KeyType: HASH
-          - AttributeName: todoId
+          - AttributeName: manualId
             KeyType: RANGE
         BillingMode: PAY_PER_REQUEST
-        TableName: ${self:provider.environment.TODOS_TABLE}
+        TableName: ${self:provider.environment.MANUALS_TABLE}
         LocalSecondaryIndexes:
-          - IndexName: ${self:provider.environment.TODOS_CREATED_AT_INDEX}
+          - IndexName: ${self:provider.environment.MANUAL_CREATED_AT_INDEX}
             KeySchema:
               - AttributeName: userId
                 KeyType: HASH
@@ -257,9 +237,7 @@ resources:
                 KeyType: RANGE
             Projection:
               ProjectionType: ALL
-    # TODO: Complete the bucket properties below. 
-    # Do not forget to add the CorsConfiguration propoerty
-    # Done
+
     AttachmentsBucket:
       Type: AWS::S3::Bucket
       Properties:
@@ -277,9 +255,7 @@ resources:
                 - DELETE
                 - HEAD
               MaxAge: 3000
-    # TODO: Complete the policy below and attach it to the bucket defined above
-    # For cross referencing the name of the bucket, use "!Ref AttachmentsBucket"
-    # Done
+
     BucketPolicy:
       Type: AWS::S3::BucketPolicy
       Properties:

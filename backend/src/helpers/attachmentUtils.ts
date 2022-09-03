@@ -16,7 +16,7 @@ export class AttachmentUtils {
       return this.s3.getSignedUrl('putObject', {
         Bucket: this.bucketName,
         Key: manualId,
-        Expires: this.urlExpiration
+        Expires: 3000
       })
     }
   }

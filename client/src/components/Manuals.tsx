@@ -192,7 +192,10 @@ export class Manuals extends React.PureComponent<ManualsProps, ManualsState> {
                 </Button>
               </Grid.Column>
               {manual.attachmentUrl && (
-                <Image src={manual.attachmentUrl} size="small" wrapped />
+                //<Image src={manual.attachmentUrl} size="small" wrapped />
+                <iframe title="pdf viewer"
+          src={`https://docs.google.com/viewer?url=${manual.attachmentUrl}&embedded=true`}>
+        </iframe>
               )}
               <Grid.Column width={16}>
                 <Divider />

@@ -73,15 +73,15 @@ export class EditManual extends React.PureComponent<
   render() {
     return (
       <div>
-        <h1>Upload new image</h1>
+        <h1>Upload new manual</h1>
 
         <Form onSubmit={this.handleSubmit}>
           <Form.Field>
             <label>File</label>
             <input
               type="file"
-              accept="image/*"
-              placeholder="Image to upload"
+              accept="image/*,.pdf"
+              placeholder="Manual to upload"
               onChange={this.handleFileChange}
             />
           </Form.Field>
@@ -96,7 +96,7 @@ export class EditManual extends React.PureComponent<
 
     return (
       <div>
-        {this.state.uploadState === UploadState.FetchingPresignedUrl && <p>Uploading image metadata</p>}
+        {this.state.uploadState === UploadState.FetchingPresignedUrl && <p>Uploading manual metadata</p>}
         {this.state.uploadState === UploadState.UploadingFile && <p>Uploading file</p>}
         <Button
           loading={this.state.uploadState !== UploadState.NoUpload}

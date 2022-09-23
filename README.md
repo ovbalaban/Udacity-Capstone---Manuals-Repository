@@ -87,4 +87,4 @@ The project is designed to fulfil the following options:
 - (Option 2): Best practices
 - (Option 2): Architecture
 
-Screenshots showing all the above criteria satisfied are in the screenshots folder
+Screenshots showing all the above criteria satisfied are in the `screenshots` folder

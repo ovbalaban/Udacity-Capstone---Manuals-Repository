@@ -1,6 +1,5 @@
 import dateFormat from 'dateformat'
 import { History } from 'history'
-import update from 'immutability-helper'
 import * as React from 'react'
 import {
   Button,
@@ -9,7 +8,6 @@ import {
   Header,
   Icon,
   Input,
-  Image,
   Loader
 } from 'semantic-ui-react'
 
@@ -183,7 +181,7 @@ export class Manuals extends React.PureComponent<ManualsProps, ManualsState> {
               </Grid.Column>
               {manual.attachmentUrl && (
                 //<Image src={manual.attachmentUrl} size="small" wrapped />
-                <iframe title="pdf viewer"
+                <iframe className="responsive-iframe"  title="pdf viewer"
           src={`https://docs.google.com/viewer?url=${manual.attachmentUrl}&embedded=true`}>
         </iframe>
               )}

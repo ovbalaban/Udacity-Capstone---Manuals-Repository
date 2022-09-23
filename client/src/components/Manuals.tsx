@@ -4,7 +4,6 @@ import update from 'immutability-helper'
 import * as React from 'react'
 import {
   Button,
-  Checkbox,
   Divider,
   Grid,
   Header,
@@ -78,11 +77,6 @@ export class Manuals extends React.PureComponent<ManualsProps, ManualsState> {
         name: manual.name,
         addDate: manual.addDate
       })
-  /*     this.setState({
-        manuals: update(this.state.manuals, {
-          [pos]: { done: { $set: !manual.done } }
-        })
-      }) */
     } catch {
       alert('Manual deletion failed')
     }
@@ -162,10 +156,6 @@ export class Manuals extends React.PureComponent<ManualsProps, ManualsState> {
           return (
             <Grid.Row key={manual.manualId}>
               <Grid.Column width={1} verticalAlign="middle">
-{/*                 <Checkbox
-                  onChange={() => this.onManualCheck(pos)}
-                  checked={manual.done}
-                /> */}
               </Grid.Column>
               <Grid.Column width={10} verticalAlign="middle">
                 {manual.name}

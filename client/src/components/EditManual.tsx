@@ -80,7 +80,7 @@ export class EditManual extends React.PureComponent<
             <label>File</label>
             <input
               type="file"
-              accept="image/*,.pdf"
+              accept=".pdf"
               placeholder="Manual to upload"
               onChange={this.handleFileChange}
             />
